@@ -1,4 +1,4 @@
 # CppCodes
-This is my codes to prctice cpp.
+This is my codes to practice cpp.
 <br>
 Author- Md. Fahim
