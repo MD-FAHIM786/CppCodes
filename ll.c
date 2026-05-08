@@ -15,6 +15,53 @@ struct Node* createNode(int val) {
     return newNode;
 }
 
+void push_front(int val) {
+    struct Node* newNode = createNode(val);
+    newNode->next = head;
+    head = newNode;
+}
+
+void push_back(int val) {
+    struct Node* newNode = createNode(val);
+    if(head == NULL) {
+        head = newNode;
+        return;
+    }
+    struct Node* temp = head;
+    while(temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+void push_pos(int val, int pos) {
+    if(pos == 1) {
+        push_front(val);
+        return;
+    }
+    struct Node* newNode = createNode(val);
+    struct Node* temp = head;       
+    for(int i = 1; i < pos - 1; i++) {
+        if(temp->next == NULL) {
+            printf("Invalid position\n");
+            return;
+        }
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+void pop_front() {
+    if(head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    free(temp);
+}
+
 void pop_back() {
     if(head == NULL) {
         printf("List is empty\n");
