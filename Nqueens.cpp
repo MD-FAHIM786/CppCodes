@@ -1,60 +1,92 @@
-#include<bits/stdc++.h>
-#include<vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
+class Solution
+{
 public:
-
-     void solve(int col, vector<string> &board, vector<vector<string>> &ans, int n, vector<int> &leftRow, vector<int> &upperDiagonal, vector<int> &lowerDiagonal) {
-        if(col == n) {
-            ans.push_back(board);
-            return;
+    // Check if it's safe to place a queen at the given position
+bool isSafe(vector<string> &board, int row, int col, int n) //O(n) time complexity
+    {
+        // horizontal
+        for (int j = 0; j < n; j++)
+        {
+            if (board[row][j] == 'Q')
+                return false;
         }
-        
-        for(int row = 0; row < n; row++) {
-            if(leftRow[row] == 0 && lowerDiagonal[row + col] == 0 && upperDiagonal[n - 1 + col - row] == 0) {
-                board[row][col] = 'Q';
-                leftRow[row] = 1;
-                lowerDiagonal[row + col] = 1;
-                upperDiagonal[n - 1 + col - row] = 1;
-                
-                solve(col + 1, board, ans, n, leftRow, upperDiagonal, lowerDiagonal);
-                
-                board[row][col] = '.';
-                leftRow[row] = 0;
-                lowerDiagonal[row + col] = 0;
-                upperDiagonal[n - 1 + col - row] = 0;
+
+        // vertical
+        for (int i = 0; i < n; i++)
+        {
+            if (board[i][col] == 'Q')
+                return false;
+        }
+
+        // left diagonal
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        {
+            if (board[i][j] == 'Q')
+            {
+                return false;
             }
         }
-     }
-};
 
-vector<vector<string>> solveNQueens(int n) {
-    vector<vector<string>> ans;
-    vector<string> board(n);
-    string s(n, '.');
-    
-    for(int i = 0; i < n; i++) {
-        board[i] = s;
+        // right diagonal
+        for (int i = row, j = col; i >= 0 && j < n; i--, j++)
+        {
+            if (board[i][j] == 'Q')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
-    
-    vector<int> leftRow(n, 0), upperDiagonal(2 * n - 1, 0), lowerDiagonal(2 * n - 1, 0);
-    
-    Solution().solve(0, board, ans, n, leftRow, upperDiagonal, lowerDiagonal);
-    
-    return ans;
-}
+// Backtracking function to place queens on the board
+    void nQueens(vector<string> &board, int row, int n, vector<vector<string>> &ans)//O(n^n) time complexity
+    {
+        if (row == n)
+        {
+            ans.push_back({board});
+            return;
+        }
 
-int main() {
-    int n = 4; // Example input
-    vector<vector<string>> solutions = solveNQueens(n);
-    
-    for(const auto& solution : solutions) {
-        for(const auto& row : solution) {
+        for (int j = 0; j < n; j++)
+        {
+            if (isSafe(board, row, j, n))
+            {
+                board[row][j] = 'Q';
+                nQueens(board, row + 1, n, ans);
+                board[row][j] = '.';
+            }
+        }
+    }
+// Main function to solve the N-Queens problem
+    vector<vector<string>> solveNQueeens(int n) //O(n^n) time complexity
+    {
+        vector<string> board(n, string(n, '.'));
+        vector<vector<string>> ans;
+
+        nQueens(board, 0, n, ans);
+        return ans;
+    }
+};
+// Main function to read input and display the solutions
+int main() //O(n^n) time complexity
+{
+    int n;
+    cin >> n;
+
+    Solution sol;
+    vector<vector<string>> ans = sol.solveNQueeens(n);
+
+    for (const auto &solution : ans)
+    {
+        for (const auto &row : solution)
+        {
             cout << row << endl;
         }
-        cout << endl;
+        cout << endl; // Separate different solutions with a blank line
     }
-    
+
     return 0;
 }
