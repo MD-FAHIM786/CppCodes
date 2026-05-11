@@ -40,6 +40,53 @@ void push_back(int val) {
     }
 }
 
+void push_pos(int val, int pos)
+{
+    if (pos < 1)
+    {
+        printf("Invalid position\n");
+        return;
+    }
+
+    if (pos == 1)
+    {
+        push_front(val);
+        return;
+    }
+
+    struct Node *temp = head;
+
+    for (int i = 1; i < pos - 1; i++)
+    {
+        if (temp == NULL)
+        {
+            printf("Position out of bounds\n");
+            return;
+        }
+        temp = temp->next;
+    }
+
+    if (temp == NULL)
+    {
+        printf("Position out of bounds\n");
+        return;
+    }
+
+    if (temp->next == NULL)
+    {
+        push_back(val);
+        return;
+    }
+
+    struct Node *newNode = createNode(val);
+
+    newNode->next = temp->next;
+    newNode->prev = temp;
+
+    temp->next->prev = newNode;
+    temp->next = newNode;
+}
+
 void pop_front() {
     if(head == NULL) {
         printf("List is empty\n");
@@ -70,14 +117,60 @@ void pop_back() {
     free(temp);
 }
 
-void printList() {
-    struct Node* temp = head;
-    while(temp != NULL) {
-        printf("%d <=> ", temp->data);
+void pop_pos(int pos)
+{
+    if (head == NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+
+    if (pos == 1)
+    {
+        pop_front();
+        return;
+    }
+
+    struct Node *temp = head;
+
+    for (int i = 1; i < pos; i++)
+    {
+        if (temp == NULL)
+        {
+            printf("Position out of bounds\n");
+            return;
+        }
         temp = temp->next;
     }
-    printf("NULL\n");
+
+    if (temp == NULL)
+    {
+        printf("Position out of bounds\n");
+        return;
+    }
+
+    if (temp->next == NULL)
+    {
+        pop_back();
+        return;
+    }
+
+    temp->prev->next = temp->next;
+    temp->next->prev = temp->prev;
+
+    free(temp);
 }
+
+        void printList()
+        {
+            struct Node *temp = head;
+            while (temp != NULL)
+            {
+                printf("%d <=> ", temp->data);
+                temp = temp->next;
+            }
+            printf("NULL\n");
+        }
 int main()
 {
     push_front(10);
@@ -85,9 +178,9 @@ int main()
     push_back(30);
     push_back(40);
     printList();
-    pop_front();
+    push_pos(25, 3);
     printList();
-    pop_back();
+    pop_pos(3);
     printList();
     return 0;
 }
