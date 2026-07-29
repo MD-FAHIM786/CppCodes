@@ -1,59 +1,53 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int partition(vector<int> &vec, int lb, int ub)
+int partition(vector<int> &vec, int LI, int UI)
 {
-    int pivot = vec[lb];
-    int start = lb + 1;
-    int end = ub;
-
+    int pivot = vec[LI];
+    int i = LI + 1, j = UI;
     while (true)
     {
-        while (start <= ub && vec[start] <= pivot)
-            start++;
+        while (i <= UI && vec[i] <= pivot)
+            i++;
 
-        while (vec[end] > pivot)
-            end--;
-
-        if (start < end)
-            swap(vec[start], vec[end]);
+        while (vec[j] > pivot)
+            j--;
+        if (i < j)
+            swap(vec[i], vec[j]);
         else
             break;
     }
 
-    swap(vec[lb], vec[end]);
-    return end;
+    swap(vec[LI], vec[j]);
+    return j;
 }
 
-void quickSort(vector<int> &vec, int lb, int ub)
+int quickSort(vector<int> &vec, int LI, int UI)
 {
-    if (lb < ub)
+    if (LI < UI)
     {
-        int loc = partition(vec, lb, ub);
-        quickSort(vec, lb, loc - 1);
-        quickSort(vec, loc + 1, ub);
+        int loc = partition(vec, LI, UI);
+        quickSort(vec, LI, loc - 1);
+        quickSort(vec, loc + 1, UI);
     }
+    return 0;
 }
 
 int main()
 {
     int n;
-    cout << "Enter number of elements: ";
+    cout << "Enter the number of elements: ";
     cin >> n;
-
     vector<int> vec(n);
 
-    cout << "Enter elements: ";
+    cout << "Enter The elements: ";
     for (int i = 0; i < n; i++)
-    {
         cin >> vec[i];
-    }
 
     quickSort(vec, 0, n - 1);
 
-    cout << "Sorted array: ";
+    cout << "Sorted elements: ";
     for (int x : vec)
-    {
         cout << x << " ";
-    }
+    cout << "\n";
 }
